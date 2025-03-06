@@ -36,7 +36,7 @@ return new class extends Migration
             $table->string('ip_address', 45)->nullable()->index();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
-            $table->integer('last_activity')->index(); cleanup
+            $table->integer('last_activity')->index();
         });
     }
 
