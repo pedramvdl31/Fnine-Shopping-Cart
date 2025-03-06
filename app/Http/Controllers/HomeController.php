@@ -2,26 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use App\Models\Product;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Session;
+use App\Models\Cart;
 
 class HomeController extends Controller
 {
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
+
+    // GET, Homepage where we can see a catalog of the items
     public function index(Request $request)
     {
-        $products = Product::all();
-        return view('index', compact('products'));
+
+        // Manually logs in the user (User id = 1) since we don't have the user auth yet
+        $user = User::first(); 
+        Auth::login($user, true);
+
+        // Fetch user's cart
+        $cart = Cart::where('user_id', $user->id)
+                    ->with('product')
+                    ->get()
+                    ->filter(function ($item) {
+                        return $item->product !== null; // Remove cart where product is missing
+                    });
+
+        $products = Product::paginate(9);
+        
+        return view('index', compact('products', 'cart'));
     }
 
-
 }
-
