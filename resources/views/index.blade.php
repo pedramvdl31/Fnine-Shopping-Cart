@@ -1,29 +1,10 @@
 @extends('layouts.main')
 
-@section('styles')
-
-
-@endsection
-
-@section('scripts')
-    
-
-@endsection
+@push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/global.css') }}">
+@endpush
 
 @section('content')
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name') }}</title>
-    <!-- For icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('assets/css/index.css') }}">
-</head>
-<body>
 
     <div id="toast-container"></div>
 
@@ -152,11 +133,10 @@
         @endif
     </div>
 
-
-    <script src="{{ asset('assets/js/global.js') }}"></script>
-    <script src="{{ asset('assets/js/cart.js') }}"></script>
-    <script src="{{ asset('assets/js/index.js') }}"></script>
-</body>
-</html>
-
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('assets/js/global.js') }}"></script>
+    <script src="{{ asset('assets/js/homepage/cart.js') }}"></script>
+    <script src="{{ asset('assets/js/homepage/index.js') }}"></script>
+@endpush
