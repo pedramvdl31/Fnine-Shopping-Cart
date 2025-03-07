@@ -444,6 +444,10 @@ input[type="number"] {
     padding: 10px;
 }
 
+.atc-wrapper{
+    padding: 20px;
+}
+
 .cart-footer {
     padding: 10px;
     border-top: 1px solid #ddd;
