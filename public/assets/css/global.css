@@ -435,7 +435,7 @@ input[type="number"] {
     padding: 10px;
     border-top: 1px solid #ddd;
     text-align: center;
-    background: white;
+    background: transparent;
     width: 100%;
 }
 
