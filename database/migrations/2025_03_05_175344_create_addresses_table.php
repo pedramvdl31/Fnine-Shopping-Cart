@@ -12,14 +12,14 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Link to users
             $table->string('street');
-            $table->string('city');
+            $table->string('city')->index();
             $table->string('state')->nullable();
             $table->string('province')->nullable();
             $table->string('country')->default('Canada'); // Default to Canada
             $table->string('postal_code')->nullable(); // For Canada
             $table->string('zip_code')->nullable(); // For US
             $table->string('phone')->nullable();
-            $table->boolean('is_default')->default(false);
+            $table->boolean('is_default')->default(false)->index();
             $table->timestamps();
         });
     }

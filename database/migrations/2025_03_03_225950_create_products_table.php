@@ -10,9 +10,9 @@ return new class extends Migration {
         // Product tables
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->index();
             $table->text('description')->nullable();
-            $table->decimal('price', 10, 2);
+            $table->decimal('price', 10, 2)->index();
             $table->string('image_url')->nullable();
             $table->integer('stock')->default(0);
             $table->timestamps();
