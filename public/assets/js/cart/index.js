@@ -88,11 +88,9 @@ function manualUpdateQuantity(productId) {
     .catch(error => console.error("Error updating cart:", error));
 }
 
-
-// Function to update final total
+// Show the final prices
 function updateFinalTotal(cart) {
 
-    // For an empty cart
     if (!cart || cart.length === 0) {
         document.getElementById("subtotal-value").textContent = "$0.00";
         document.getElementById("gst-value").textContent = "$0.00";
@@ -109,11 +107,17 @@ function updateFinalTotal(cart) {
     let qstAmount = subtotal * (qst / 100);
     let total = subtotal + gstAmount + qstAmount;
 
-    document.getElementById("subtotal-value").textContent = `$${subtotal.toFixed(2)}`;
-    document.getElementById("gst-value").textContent = `$${gstAmount.toFixed(2)}`;
-    document.getElementById("qst-value").textContent = `$${qstAmount.toFixed(2)}`;
-    document.getElementById("final-total").textContent = `$${total.toFixed(2)}`;
+    // format 1000
+    function formatNumber(num) {
+        return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    document.getElementById("subtotal-value").textContent = `$${formatNumber(subtotal)}`;
+    document.getElementById("gst-value").textContent = `$${formatNumber(gstAmount)}`;
+    document.getElementById("qst-value").textContent = `$${formatNumber(qstAmount)}`;
+    document.getElementById("final-total").textContent = `$${formatNumber(total)}`;
 }
+
 
 // Remove an item from the cart
 function removeCart(productId) {

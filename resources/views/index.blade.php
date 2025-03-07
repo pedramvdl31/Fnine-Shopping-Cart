@@ -70,36 +70,42 @@
     <div class="container">
         <div class="row">
 
-            <!-- list of the products -->
-            @foreach($products as $product)
-
-                <!-- checking the cart to handle buttons if that item is already in the stock and  -->
-                <!-- the qty is equal to the stock number -->
-                @php
-                    $cartItem = $cart->firstWhere('product_id', $product->id);
-                @endphp
-
-                <div class="product-card">
-                    <img id="product-img-{{ $product->id }}" src="{{ asset($product->image_url) }}" class="product-img" alt="{{ $product->name }}">
-                    <h5 class="product-title">{{ $product->name }}</h5>
-                    <p class="price">${{ number_format($product->price, 2) }}</p>
-                    <p class="stock">Stock: {{ $product->stock }}</p>
-                    <label for="quantity-{{ $product->id }}">Qty:</label>
-
-                    <input type="number" id="quantity-{{ $product->id }}" 
-                           value="1" min="1" max="{{ $product->stock }}"
-                           oninput="checkStock({{ $product->id }}, {{ $product->stock }})"
-                           {{ ($cartItem && $cartItem->quantity >= $product->stock) ? 'disabled' : '' }}>
-
-                    <button id="add-to-cart-{{ $product->id }}" class="add-to-cart"
-                            data-id="{{ $product->id }}" 
-                            data-stock="{{ $product->stock }}"
-                            onclick="addToCart({{ $product->id }}, '{{ $product->name }}', {{ $product->price }}, {{ $product->stock }})"
-                            {{ ($cartItem && $cartItem->quantity >= $product->stock) ? 'disabled' : '' }}>
-                        Add to Cart
-                    </button>
+            @if($products->isEmpty())
+                <div class="no-products">
+                    <h3>No products available.</h3>
+                    <p>Check back later for new stock!</p>
                 </div>
-            @endforeach
+            @else
+                @foreach($products as $product)
+
+                    <!-- checking the cart to handle buttons if that item is already in the stock and  -->
+                    <!-- the qty is equal to the stock number -->
+                    @php
+                        $cartItem = $cart->firstWhere('product_id', $product->id);
+                    @endphp
+
+                    <div class="product-card">
+                        <img id="product-img-{{ $product->id }}" src="{{ asset($product->image_url) }}" class="product-img" alt="{{ $product->name }}">
+                        <h5 class="product-title">{{ $product->name }}</h5>
+                        <p class="price">${{ number_format($product->price, 2) }}</p>
+                        <p class="stock">Stock: {{ $product->stock }}</p>
+                        <label for="quantity-{{ $product->id }}">Qty:</label>
+
+                        <input type="number" id="quantity-{{ $product->id }}" 
+                               value="1" min="1" max="{{ $product->stock }}"
+                               oninput="checkStock({{ $product->id }}, {{ $product->stock }})"
+                               {{ ($cartItem && $cartItem->quantity >= $product->stock) ? 'disabled' : '' }}>
+
+                        <button id="add-to-cart-{{ $product->id }}" class="add-to-cart"
+                                data-id="{{ $product->id }}" 
+                                data-stock="{{ $product->stock }}"
+                                onclick="addToCart({{ $product->id }}, '{{ $product->name }}', {{ $product->price }}, {{ $product->stock }})"
+                                {{ ($cartItem && $cartItem->quantity >= $product->stock) ? 'disabled' : '' }}>
+                            Add to Cart
+                        </button>
+                    </div>
+                @endforeach
+            @endif
 
         </div>
 

@@ -10,6 +10,8 @@ function addToCart(productId, name, price, stock) {
         return;
     }
 
+    checkStockLimit(productId, quantityToAdd, stock);
+
     fetch('/cart/add', {
         method: "POST",
         headers: {
@@ -92,6 +94,8 @@ function updateCartQuantity(productId, change) {
 
     quantityInput.value = newQuantity; // Update input field
 
+    checkStockLimit(productId, newQuantity, maxStock);
+
     // Send request to backend
     fetch('/cart/update', {
         method: "POST",
@@ -137,6 +141,8 @@ function manualUpdateQuantity(productId) {
     // Disable plus button if quantity reaches stock
     plusButton.disabled = newQuantity >= maxStock;
 
+    checkStockLimit(productId, newQuantity, maxStock);
+
     // Send update request to backend
     fetch('/cart/update', {
         method: "POST",
@@ -157,6 +163,17 @@ function manualUpdateQuantity(productId) {
     .catch(error => console.error("Error updating cart:", error));
 }
 
+// Check if quantity matches stock qty
+function checkStockLimit(productId, quantity, stock) {
+    let addButton = document.getElementById(`add-to-cart-${productId}`);
+    let quantityInput = document.getElementById(`quantity-${productId}`);
 
-
+    if (quantity >= stock) {
+        if (addButton) addButton.disabled = true;
+        if (quantityInput) quantityInput.disabled = true;
+    } else {
+        if (addButton) addButton.disabled = false;
+        if (quantityInput) quantityInput.disabled = false;
+    }
+}
 
