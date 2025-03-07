@@ -52,9 +52,15 @@
 
     /* Make table scrollable */
     .cart-items-container {
-        overflow-x: auto;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .cart-summary {
+        width: 100%;
+        text-align: center;
+        margin-top: 20px;
     }
 
      /* Hide headers on small screens */
@@ -105,8 +111,4 @@
         width: 100%;
     }
 
-    /* Center summary on small screens */
-    .cart-summary {
-        text-align: center;
-    }
 }
