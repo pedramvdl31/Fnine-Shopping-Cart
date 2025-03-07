@@ -15,15 +15,33 @@ function updateCartQuantity(productId, change) {
         newQuantity = maxStock;
     }
 
-    quantityInput.value = newQuantity; // Update input field
+    quantityInput.value = newQuantity;
 
-    // Disable minus button if quantity is 1
+    // Disable buttons smaller than 1 or equal to stock
     minusButton.disabled = newQuantity <= 1;
-
-    // Disable plus button if quantity is equal to stock
     plusButton.disabled = newQuantity >= maxStock;
 
-    // Send request
+    // Get the row of the product
+    let row = document.querySelector(`tr[data-product-id="${productId}"]`);
+    if (row) {
+        let priceElement = row.querySelector("td:nth-child(3)"); // Price column
+        let totalElement = row.querySelector("td:nth-child(6)"); // Total column
+
+        if (priceElement && totalElement) {
+            // Extract price correctly by removing commas and dollar signs
+            let priceText = priceElement.textContent.replace(/[$,]/g, ""); 
+            let price = parseFloat(priceText); 
+
+            if (!isNaN(price)) {
+                let newTotal = price * newQuantity;
+                totalElement.textContent = `$${newTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            } else {
+                console.error(`Error parsing price for product ${productId}:`, priceText);
+            }
+        }
+    }
+
+    // Send request to update the cart in the backend
     fetch('/cart/update', {
         method: "POST",
         headers: {
@@ -35,14 +53,14 @@ function updateCartQuantity(productId, change) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            //Update the total amount in UI
-            updateFinalTotal(data.cart);
+            updateFinalTotal(data.cart); // Update total at bottom
         } else {
             showToast(data.error || "Failed to update quantity.", "error");
         }
     })
     .catch(error => console.error("Error updating cart:", error));
 }
+
 
 // Update the server if the user change the quantity manually
 function manualUpdateQuantity(productId) {
@@ -90,32 +108,38 @@ function manualUpdateQuantity(productId) {
 
 // Show the final prices
 function updateFinalTotal(cart) {
+    // Get all theelements
+    let subtotalElement = document.getElementById("subtotal-value");
+    let gstElement = document.getElementById("gst-value");
+    let qstElement = document.getElementById("qst-value");
+    let totalElement = document.getElementById("final-total");
 
+    // reset
     if (!cart || cart.length === 0) {
-        document.getElementById("subtotal-value").textContent = "$0.00";
-        document.getElementById("gst-value").textContent = "$0.00";
-        document.getElementById("qst-value").textContent = "$0.00";
-        document.getElementById("final-total").textContent = "$0.00";
+        subtotalElement.textContent = "$0.00";
+        if (gstElement) gstElement.textContent = "$0.00";
+        if (qstElement) qstElement.textContent = "$0.00";
+        totalElement.textContent = "$0.00";
         return;
     }
 
     let subtotal = cart.reduce((sum, item) => sum + (item.quantity * item.price), 0);
-    let gst = parseFloat(document.querySelector("#gst-value").dataset.gst || 0);
-    let qst = parseFloat(document.querySelector("#qst-value").dataset.qst || 0);
+
+    let gst = gstElement ? parseFloat(gstElement.dataset.gst || 0) : 0;
+    let qst = qstElement ? parseFloat(qstElement.dataset.qst || 0) : 0;
 
     let gstAmount = subtotal * (gst / 100);
     let qstAmount = subtotal * (qst / 100);
     let total = subtotal + gstAmount + qstAmount;
 
-    // format 1000
     function formatNumber(num) {
         return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
-    document.getElementById("subtotal-value").textContent = `$${formatNumber(subtotal)}`;
-    document.getElementById("gst-value").textContent = `$${formatNumber(gstAmount)}`;
-    document.getElementById("qst-value").textContent = `$${formatNumber(qstAmount)}`;
-    document.getElementById("final-total").textContent = `$${formatNumber(total)}`;
+    subtotalElement.textContent = `$${formatNumber(subtotal)}`;
+    if (gstElement) gstElement.textContent = `$${formatNumber(gstAmount)}`;
+    if (qstElement) qstElement.textContent = `$${formatNumber(qstAmount)}`;
+    totalElement.textContent = `$${formatNumber(total)}`;
 }
 
 

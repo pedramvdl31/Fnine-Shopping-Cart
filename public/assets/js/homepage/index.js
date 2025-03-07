@@ -61,7 +61,6 @@ function updateCartUI(cart) {
 }
 
 
-
 // Update cart count in UI
 function updateCartCount(cart) {
     let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);

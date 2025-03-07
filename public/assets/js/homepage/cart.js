@@ -1,4 +1,3 @@
-
 // Add an item to the cart
 function addToCart(productId, name, price, stock) {
     let quantityInput = document.getElementById(`quantity-${productId}`);
@@ -122,7 +121,16 @@ function manualUpdateQuantity(productId) {
     let minusButton = document.querySelector(`#minus-btn-${productId}`);
     let plusButton = document.querySelector(`#plus-btn-${productId}`);
 
-    let newQuantity = parseInt(quantityInput.value);
+    let newQuantity = quantityInput.value.trim(); // Get the input value and remove spaces
+
+    // Allow deleting and typing new value
+    if (newQuantity === "") {
+        return;
+    }
+
+    newQuantity = parseInt(newQuantity);
+
+    // If the value is not a number or less than 1, reset to 1
     if (isNaN(newQuantity) || newQuantity < 1) {
         newQuantity = 1;
     }
@@ -132,13 +140,10 @@ function manualUpdateQuantity(productId) {
         newQuantity = maxStock;
     }
 
-     // Correct invalid input values if the user typed in a larger qty
     quantityInput.value = newQuantity;
 
-    // Disable minus button if quantity is 1
     minusButton.disabled = newQuantity <= 1;
 
-    // Disable plus button if quantity reaches stock
     plusButton.disabled = newQuantity >= maxStock;
 
     checkStockLimit(productId, newQuantity, maxStock);
@@ -162,6 +167,7 @@ function manualUpdateQuantity(productId) {
     })
     .catch(error => console.error("Error updating cart:", error));
 }
+
 
 // Check if quantity matches stock qty
 function checkStockLimit(productId, quantity, stock) {

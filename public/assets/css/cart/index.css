@@ -1,41 +1,86 @@
-/* Table styling */
+/* Table Styling */
 .cart-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.cart-table th, 
-.cart-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-}
 
+/* Table header */
 .cart-table th {
-    background-color: #f4f4f4;
+    background-color: #5a67d8; /* Soft Blue */
+    color: white;
+    padding: 14px;
+    font-size: 18px;
+    border-bottom: 2px solid #4c51bf; /* Slightly darker blue */
 }
+
+/* Table cell */
+.cart-table td {
+    padding: 14px;
+    text-align: center;
+    font-size: 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-table .checkout-row td {
+    border: none;
+    padding-top: 20px;
+}
+
+.checkout-btn {
+    padding: 14px 22px;
+    font-size: 20px;
+    background-color: #ff704d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.checkout-btn:hover {
+    background-color: #e65c3d;
+}
+
+.cart-table tfoot td {
+    font-weight: bold;
+    padding: 16px;
+    text-align: right;
+    background-color: #f3f3f3;
+}
+
+.cart-table tfoot tr:last-child td {
+    font-size: 22px;
+    color: #ff4d4d; /* Soft red */
+    border-top: 3px solid #5a67d8;
+}
+
+
 
 .cart-items-container {
     overflow-x: auto;
     width: 100%;
 }
 
-/* Cart summary */
 .cart-summary {
     width: 100%;
     text-align: right;
     margin-top: 20px;
+    font-size: 18px;
 }
 
-/* Checkout button */
 .checkout-btn {
-    padding: 8px 16px;
-    font-size: 20px;
+    padding: 12px 20px;
+    font-size: 22px;
     background-color: #28a745;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     transition: background 0.3s;
 }
@@ -44,13 +89,24 @@
     background-color: #218838;
 }
 
+
 /* Responsive Design */
+
+/* Add padding for the large screens */
+@media (min-width: 1024px) {
+    .cart-items-container {
+        padding: 0 20px 20px 0;
+        max-width: 95%;
+        margin: 0 auto;
+    }
+}
+
+
 @media (max-width: 768px) {
-    .cart-table {
-        min-width: 100%;
+    body {
+        padding: 0;
     }
 
-    /* Make table scrollable */
     .cart-items-container {
         display: flex;
         flex-direction: column;
@@ -61,9 +117,9 @@
         width: 100%;
         text-align: center;
         margin-top: 20px;
+        font-size: 20px;
     }
 
-     /* Hide headers on small screens */
     .cart-table thead {
         display: none;
     }
@@ -79,12 +135,12 @@
         display: flex;
         flex-direction: column;
         border: 1px solid #ddd;
-        margin-bottom: 10px;
-        padding: 15px;
+        margin-bottom: 12px;
+        padding: 18px;
         text-align: center;
         background-color: white;
-        width: 90%;
-        border-radius: 10px;
+        width: 95%;
+        border-radius: 12px;
     }
 
     .cart-table td {
@@ -92,23 +148,32 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        padding: 10px;
-        font-size: 14px;
+        padding: 12px;
+        font-size: 18px;
         width: 100%;
     }
 
-    /* Reduce image size */
     .cart-table img {
-        width: 80px;
+        width: 70%;
         height: auto;
-        border-radius: 5px;
+        border-radius: 8px;
     }
 
     .cart-quantity {
         display: flex;
         justify-content: center;
-        gap: 10px;
+        gap: 12px;
         width: 100%;
     }
 
+    .cart-quantity button {
+        font-size: 20px;
+        padding: 10px 14px;
+    }
+
+    .cart-quantity input {
+        font-size: 18px;
+        width: 50px;
+        text-align: center;
+    }
 }
