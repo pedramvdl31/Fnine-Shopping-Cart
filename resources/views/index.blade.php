@@ -18,7 +18,7 @@
             </a>
 
             <!-- Carts dropdown -->
-            <div class="cart-dropdown">
+            <div class="cart-dropdown" style="display: none;">
                 <div class="cart-items">
                     @if($cart->isEmpty())
                         <p class="text-center">Cart is empty</p>
