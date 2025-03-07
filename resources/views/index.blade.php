@@ -42,7 +42,6 @@
                                                min="1" max="{{ $item->product->stock }}" 
                                                oninput="manualUpdateQuantity({{ $item->product_id }})">
 
-                                        
                                         <button onclick="updateCartQuantity({{ $item->product_id }}, 1)" 
                                                 {{ $isMaxQuantity ? 'disabled' : '' }}>+</button>
                                     </div>
@@ -55,10 +54,11 @@
                     @endif
                 </div>
 
-                     <a href="{{ route('cart.index') }}" class="view-cart-btn {{ $cart->isEmpty() ? 'disabled-btn' : '' }}">
+                <div class="cart-footer">
+                    <a href="{{ route('cart.index') }}" class="view-cart-btn {{ $cart->isEmpty() ? 'disabled-btn' : '' }}">
                         View Cart
                     </a>
-
+                </div>
             </div>
 
 

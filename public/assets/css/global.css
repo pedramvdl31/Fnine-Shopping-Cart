@@ -409,53 +409,58 @@ input[type="number"] {
 .remove-btn:hover {
     background: darkred;
 }
-
-/* Cart Dropdown - Ensure it contains all items */
 .cart-dropdown {
     position: absolute;
     top: 100%;
     right: 0;
-    width: 300px; /* Adjust width if necessary */
+    width: 400px;
     background: white;
     border: 1px solid #ddd;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 10px;
-    z-index: 1000; /* Ensure it stays above other elements */
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Ensure Cart Items are Scrollable if too many */
 .cart-items {
-    max-height: 250px; /* Set a max height */
-    overflow-y: auto; /* Enable scrolling */
+    max-height: 250px;
+    overflow-y: auto;
     padding-bottom: 10px;
+    flex-grow: 1;
 }
 
-/* Style the View Cart Button */
+.cart-footer {
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    text-align: center;
+    background: white;
+    width: 100%;
+}
+
 .view-cart-btn {
-    display: block; /* Ensure it takes full width */
+    display: block;
+    width: 90%;
     text-align: center;
     padding: 10px;
-    margin-top: 10px; /* Space between cart items & button */
-    background: #5a67d8; /* Stylish Blue */
+    background: #5a67d8;
     color: white;
-    text-decoration: none;
     font-weight: bold;
     border-radius: 8px;
     transition: background 0.3s ease;
+    text-decoration: none;
 }
 
 .view-cart-btn:hover {
     background: #4c51bf;
 }
 
-/* If Cart is Empty, Ensure the Button Still Stays in Place */
 .cart-dropdown p.text-center {
     text-align: center;
     padding: 10px;
 }
 
-/* Add a Wrapper for View Cart Button to Ensure Proper Positioning */
 .cart-footer {
     padding: 10px;
     border-top: 1px solid #ddd;
