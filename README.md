@@ -1,67 +1,202 @@
-Test2<p align="center"><a href="https://laravel.com" target="_blank"><img 
-src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+**Server Setup & Deployment on Ubuntu 24 (AWS)**
+================================================
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This guide provides step-by-step instructions to install and configure a Laravel 11 project on an **Ubuntu 24 AWS instance** with **Apache, MySQL, PHP 8.2, and SSL (Let's Encrypt).**
 
-## About Laravel
+**1\. Server Setup & Package Installation**
+-------------------------------------------
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Update the system and install necessary packages:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+sudo apt update && sudo apt upgrade -y
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+sudo apt install zip unzip software-properties-common curl -y
 
-## Learning Laravel
+Add PHP repository and install **PHP 8.2** with required extensions:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+sudo add-apt-repository ppa:ondrej/php -y
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+sudo apt update
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+sudo apt install -y php8.2 php8.2-cli php8.2-common php8.2-gd php8.2-mbstring php8.2-xml php8.2-zip php8.2-curl php8.2-bcmath php8.2-intl php8.2-readline php8.2-mysql
 
-## Laravel Sponsors
+Install **Apache and enable mod\_rewrite**:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+sudo apt install apache2 libapache2-mod-php8.2 -y
 
-### Premium Partners
+sudo a2enmod rewrite
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+sudo systemctl restart apache2
 
-## Contributing
+**2\. SSL Setup with Let's Encrypt (Certbot)**
+----------------------------------------------
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Install Certbot and generate an SSL certificate for your domain:
 
-## Code of Conduct
+sudo apt install certbot python3-certbot-apache -y
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+sudo certbot --apache -d fnine.webprinciples.com
 
-## Security Vulnerabilities
+Test renewal:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+sudo certbot renew --dry-run
 
-## License
+**3\. Configure Apache Virtual Host**
+-------------------------------------
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Edit the **Apache configuration file**:
+
+sudo nano /etc/apache2/sites-available/fnine.conf
+
+Replace the contents with:
+
+    ServerAdmin webmaster@fnine.webprinciples.com
+
+    ServerName fnine.webprinciples.com
+
+    DocumentRoot /var/www/Fnine-Shopping-Cart/public
+
+        AllowOverride All
+
+        Require all granted
+
+    ErrorLog ${APACHE\_LOG\_DIR}/error.log
+
+    CustomLog ${APACHE\_LOG\_DIR}/access.log combined
+
+    SSLCertificateFile /etc/letsencrypt/live/fnine.webprinciples.com/fullchain.pem
+
+    SSLCertificateKeyFile /etc/letsencrypt/live/fnine.webprinciples.com/privkey.pem
+
+    Include /etc/letsencrypt/options-ssl-apache.conf
+
+Enable the configuration and restart Apache:
+
+sudo a2ensite fnine.conf
+
+sudo systemctl restart apache2
+
+**4\. MySQL Database Setup**
+----------------------------
+
+Install MySQL:
+
+sudo apt install mysql-server -y
+
+Secure MySQL installation:
+
+sudo mysql\_secure\_installation
+
+Log in to MySQL as root:
+
+sudo mysql -u root -p
+
+Create a new database and user:
+
+CREATE DATABASE fnine;
+
+GRANT ALL PRIVILEGES ON fnine.\* TO 'laravel\_user'@'localhost' IDENTIFIED BY 'your\_secure\_password';
+
+FLUSH PRIVILEGES;
+
+EXIT;
+
+**5\. Laravel Installation & Configuration**
+--------------------------------------------
+
+Navigate to the web directory and clone your Laravel project:
+
+cd /var/www/
+
+git clone https://github.com/your-repo/Fnine-Shopping-Cart.git
+
+cd Fnine-Shopping-Cart
+
+Install dependencies:
+
+composer install --no-dev --optimize-autoloader
+
+Set the correct permissions:
+
+sudo chown -R www-data:www-data /var/www/Fnine-Shopping-Cart
+
+sudo chmod -R 775 /var/www/Fnine-Shopping-Cart/storage /var/www/Fnine-Shopping-Cart/bootstrap/cache
+
+Set up the .env file:
+
+cp .env.example .env
+
+sudo nano .env
+
+Update the following database settings:
+
+DB\_DATABASE=fnine
+
+DB\_USERNAME=laravel\_user
+
+DB\_PASSWORD=your\_secure\_password
+
+Generate the application key:
+
+php artisan key:generate
+
+Run migrations:
+
+php artisan migrate
+
+Clear and cache configurations:
+
+php artisan config:clear
+
+php artisan cache:clear
+
+php artisan config:cache
+
+php artisan route:clear
+
+php artisan view:clear
+
+Restart Apache:
+
+sudo systemctl restart apache2
+
+**6\. Testing & Troubleshooting**
+---------------------------------
+
+### **Check Laravel logs:**
+
+sudo tail -f /var/www/Fnine-Shopping-Cart/storage/logs/laravel.log
+
+### **Check Apache logs:**
+
+sudo tail -f /var/log/apache2/error.log
+
+### **Manually test MySQL connection:**
+
+mysql -u laravel\_user -p
+
+If everything is working, your Laravel 11 application should now be live at:
+
+https://fnine.webprinciples.com
+
+**7\. Enable Automatic SSL Renewal (Optional)**
+-----------------------------------------------
+
+To ensure SSL certificates renew automatically, add a cron job:
+
+sudo crontab -e
+
+Add this line at the bottom:
+
+0 0 1 \* \* certbot renew --quiet
+
+Save and exit.
+
+**Final Notes**
+---------------
+
+*   Ensure that .env does not contain sensitive credentials in public repositories.
+    
+*   Always restart Apache after making changes to configurations.
+    
+*   Monitor logs frequently to detect and fix errors promptly.
