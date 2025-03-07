@@ -96,13 +96,16 @@
                                oninput="checkStock({{ $product->id }}, {{ $product->stock }})"
                                {{ ($cartItem && $cartItem->quantity >= $product->stock) ? 'disabled' : '' }}>
 
-                        <button id="add-to-cart-{{ $product->id }}" class="add-to-cart"
-                                data-id="{{ $product->id }}" 
-                                data-stock="{{ $product->stock }}"
-                                onclick="addToCart({{ $product->id }}, '{{ $product->name }}', {{ $product->price }}, {{ $product->stock }})"
-                                {{ ($cartItem && $cartItem->quantity >= $product->stock) ? 'disabled' : '' }}>
-                            Add to Cart
-                        </button>
+                        
+                        <div class="atc-wrapper">
+                            <button id="add-to-cart-{{ $product->id }}" class="add-to-cart"
+                                    data-id="{{ $product->id }}" 
+                                    data-stock="{{ $product->stock }}"
+                                    onclick="addToCart({{ $product->id }}, '{{ $product->name }}', {{ $product->price }}, {{ $product->stock }})"
+                                    {{ ($cartItem && $cartItem->quantity >= $product->stock) ? 'disabled' : '' }}>
+                                Add to Cart
+                            </button>
+                        </div>
                     </div>
                 @endforeach
             @endif

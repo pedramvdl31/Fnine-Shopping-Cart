@@ -83,6 +83,10 @@ button:disabled {
     transform: none;
 }
 
+.atc-wrapper{
+    padding: 20px;
+}
+
 /* Slightly darken the button on hover */
 .add-to-cart {
     background-color: var(--primary-color);
